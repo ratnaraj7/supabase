@@ -156,12 +156,10 @@ export const getTableRowsSqlQuery = ({
     .from(table.name, table.schema ?? undefined)
     .select(arrayBasedColumns.length > 0 ? `*,${arrayBasedColumns.join(',')}` : '*')
 
-  filters
-    .filter((x) => x.value && x.value != '')
-    .forEach((x) => {
-      const value = formatFilterValue(table, x)
-      queryChains = queryChains.filter(x.column, x.operator, value)
-    })
+  filters.forEach((x) => {
+    const value = formatFilterValue(table, x)
+    queryChains = queryChains.filter(x.column, x.operator, value)
+  })
 
   // If sorts is empty and table row count is within threshold, use the primary key as the default sort
   if (sorts.length === 0 && table.estimateRowCount <= THRESHOLD_COUNT && table.columns.length > 0) {
